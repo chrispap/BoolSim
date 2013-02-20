@@ -44,7 +44,7 @@ public class LGCadGui extends JFrame{
 		JButton bSimulate = new JButton("Simulate");
 		bSimulate.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent evt) {
-				LGCadGui.this.gBreadboard.doSimulation();
+				LGCadGui.this.gBreadboard.updateSimulation();
 			}
 		});
 		
