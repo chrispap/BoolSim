@@ -20,33 +20,33 @@ public class GPin extends JComponent {
     protected Pin pin;
 
     public GPin(GBreadboard gb, Pin pin, boolean editable) {
-	this.pin = pin;
-	this.gBreadboard = gb;
-	setSize(size, size);
+        this.pin = pin;
+        this.gBreadboard = gb;
+        setSize(size, size);
 
-	if (editable) {
-	    addMouseListener(new MouseAdapter() {
-		public void mouseClicked(MouseEvent evt) {
-		    GPin.this.pin.toggleValue();
-		    gBreadboard.updateSimulation();
-		    GPin.this.repaint();
-		}
-	    });
-	}
+        if (editable) {
+            addMouseListener(new MouseAdapter() {
+                public void mouseClicked(MouseEvent evt) {
+                    GPin.this.pin.toggleValue();
+                    gBreadboard.updateSimulation();
+                    GPin.this.repaint();
+                }
+            });
+        }
     }
 
     public void setLocation(Point p) {
-	p.setLocation(p.x - size / 2, p.y - size / 2);
-	super.setLocation(p);
+        p.setLocation(p.x - size / 2, p.y - size / 2);
+        super.setLocation(p);
     }
 
     public void paint(Graphics g_) {
-	super.paint(g_);
-	Graphics2D g = (Graphics2D) g_;
-	g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-		RenderingHints.VALUE_ANTIALIAS_ON);
-	g.setColor(pin.getValue() ? Color.YELLOW : Color.BLACK);
-	g.fillOval(size / 4, size / 4, size / 2, size / 2);
+        super.paint(g_);
+        Graphics2D g = (Graphics2D) g_;
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setColor(pin.getValue() ? Color.YELLOW : Color.BLACK);
+        g.fillOval(size / 4, size / 4, size / 2, size / 2);
     }
 
 }

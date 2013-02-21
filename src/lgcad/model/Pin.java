@@ -5,35 +5,34 @@ public class Pin {
     protected boolean value;
 
     public Pin() {
-	this(false);
+        this(false);
     }
 
     public Pin(boolean value) {
-	this.value = value;
+        this.value = value;
     }
 
     public void setSource(Socket socket) {
-	sourceSocket = socket;
+        sourceSocket = socket;
     }
 
     public Socket getSourceSocket() {
-	return sourceSocket;
+        return sourceSocket;
     }
 
     public void updateValueFromSource() {
-	if (sourceSocket != null)
-	    value = sourceSocket.getValue();
+        if (sourceSocket != null) value = sourceSocket.getValue();
     }
 
     public boolean getValue() {
-	return value;
+        return value;
     }
 
     public void setValue(boolean value) {
-	this.value = value;
+        this.value = value;
     }
 
     public void toggleValue() {
-	value = !value;
+        value = !value;
     }
 }
