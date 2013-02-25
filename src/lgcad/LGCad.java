@@ -4,6 +4,6 @@ import lgcad.gui.LGCadGui;
 
 public class LGCad {
     public static void main(String[] argv) {
-        new LGCadGui(6, 10);
+        new LGCadGui(3, 5);
     }
 }

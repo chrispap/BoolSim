@@ -3,31 +3,24 @@ package lgcad.model;
 public class Breadboard {
     public Pin[][] pins;
     public Socket[][] sockets;
-    public int RowCounter[];
 
-    public Breadboard(int width, int height) {
-        pins = new Pin[width][height];
-        sockets = new Socket[width - 1][height - 1];
-        RowCounter = new int[width];
-        
+    public Breadboard(int columns, int rows) {
+        pins = new Pin[columns][rows];
+        sockets = new Socket[columns - 1][rows - 1];
+
         /* Create pins */
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 0; i < columns; i++) {
+            for (int j = 0; j < rows; j++) {
                 pins[i][j] = new Pin();
             }
         }
-        
+
         /* Create sockets */
-        for (int i = 0; i < width-1; i++) {
-            for (int j = 0; j < height-1; j++) {
+        for (int i = 0; i < getColumnCount() - 1; i++) {
+            for (int j = 0; j < getRowCount() - 1; j++) {
                 sockets[i][j] = new Socket(this, i, j);
             }
         }
-        
-        
-        for (int i = 0; i < width; i++)
-            RowCounter[i] = 0;
-
 
     }
 
@@ -39,6 +32,15 @@ public class Breadboard {
                 }
             }
         }
+    }
+
+    public int getColumnCount() {
+        return pins.length;
+
+    }
+
+    public int getRowCount() {
+        return pins[0].length;
     }
 
 }

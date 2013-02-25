@@ -9,29 +9,60 @@ import java.awt.event.MouseEvent;
 
 import javax.swing.JComponent;
 
+import lgcad.gui.dialogs.GatePicker;
+import lgcad.gui.dialogs.InputPicker;
+import lgcad.model.Gate;
+import lgcad.model.Gate.Type;
 import lgcad.model.Socket;
 
-class GSocket extends JComponent {
+public class GSocket extends JComponent {
     private static final long serialVersionUID = 1L;
 
-    protected GBreadboard parentBreadboard;
+    private GBreadboard parentBreadboard;
     protected Socket socket;
 
     public GSocket(Socket socket, GBreadboard parent) {
         this.socket = socket;
         this.parentBreadboard = parent;
-
         addMouseListener(new GateClickListener());
-        setSize(51, 41);
+        setSize(52, 42);
+    }
+
+    public GBreadboard getParentBreadboard() {
+        return parentBreadboard;
+    }
+
+    public void setGateType(Type gateType) {
+        socket.setGate(Gate.makeGate(gateType));
+    }
+
+    public void makeConnections(Integer pinNumber1, Integer pinNumber2, Integer outPinNumber) {
+        socket.getInputPinNumbers().clear();
+        socket.getInputPinNumbers().add(pinNumber1);
+        socket.getInputPinNumbers().add(pinNumber2);
+
+        if (socket.getOutputPin() != null) socket.getOutputPin().setSource(null);
+
+        try {
+            socket.getParentBreadBoard().pins[socket.getColumn() + 1][outPinNumber].getSourceSocket()
+                    .setOutputPin(null);
+        } catch (Exception exc) {
+        }
+
+        socket.setOutputPin(socket.getParentBreadBoard().pins[socket.getColumn() + 1][outPinNumber]);
+        socket.getParentBreadBoard().pins[socket.getColumn() + 1][outPinNumber].setSource(socket);
+        getParentBreadboard().updateSimulation();
+        getParentBreadboard().repaint();
     }
 
     public void paint(Graphics g_) {
         super.paint(g_);
         Graphics2D g = (Graphics2D) g_;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(Color.LIGHT_GRAY);
         g.fillRect(0, 0, getWidth(), getHeight());
+
+        if (socket.getGate() == null) return;
 
         g.setColor(Color.BLACK);
         switch (socket.getGate().type) {
@@ -80,31 +111,14 @@ class GSocket extends JComponent {
     }
 
     class GateClickListener extends MouseAdapter {
-        public void mouseClicked(MouseEvent e) {
-            new InputPicker(GSocket.this);
-            super.mouseClicked(e);
+        public void mouseClicked(MouseEvent evt) {
+            if (evt.isControlDown())
+                new InputPicker(GSocket.this);
+            else
+                new GatePicker(GSocket.this);
+
+            super.mouseClicked(evt);
         }
-    }
-
-    public void makeConnections(Integer pinNumber1, Integer pinNumber2,
-            Integer outPinNumber) {
-        socket.getInputPinNumbers().clear();
-        socket.getInputPinNumbers().add(pinNumber1);
-        socket.getInputPinNumbers().add(pinNumber2);
-
-        if (socket.getOutputPin() != null) socket.getOutputPin().setSource(null);
-
-        try {
-            socket.getParentBreadBoard().pins[socket.getColumn() + 1][outPinNumber]
-                    .getSourceSocket().setOutputPin(null);
-        } catch (Exception exc) {
-
-        }
-
-        socket.setOutputPin(socket.getParentBreadBoard().pins[socket.getColumn() + 1][outPinNumber]);
-        socket.getParentBreadBoard().pins[socket.getColumn() + 1][outPinNumber].setSource(socket);
-        parentBreadboard.updateSimulation();
-        parentBreadboard.repaint();
     }
 
 }

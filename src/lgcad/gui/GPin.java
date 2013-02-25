@@ -43,8 +43,7 @@ public class GPin extends JComponent {
     public void paint(Graphics g_) {
         super.paint(g_);
         Graphics2D g = (Graphics2D) g_;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setColor(pin.getValue() ? Color.YELLOW : Color.BLACK);
         g.fillOval(size / 4, size / 4, size / 2, size / 2);
     }

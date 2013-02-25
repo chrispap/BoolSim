@@ -6,57 +6,55 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.RenderingHints;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-import javax.swing.JButton;
 import javax.swing.JPanel;
 
 import lgcad.model.Breadboard;
 import lgcad.model.Pin;
 import lgcad.model.Socket;
-import lgcad.model.Gate.Type;
 
 public class GBreadboard extends JPanel {
     private static final long serialVersionUID = 1L;
 
     Breadboard mBreadboard;
 
-    public GBreadboard(int width, int height) {
+    public GBreadboard(int columns, int rows) {
         super();
-        mBreadboard = new Breadboard(width, height);
+        mBreadboard = new Breadboard(columns, rows);
 
-        setBackground(Color.GRAY);
-        setPreferredSize(new Dimension((getColumnCount() - 1) * 200 + 30,
-                (getRowCount()) * 50 + 30));
         setLayout(null);
+        setBackground(Color.GRAY);
+        setPreferredSize(new Dimension((getColumnCount() - 1) * 200 + 30, (getRowCount()) * 50 + 30));
 
-        for (int i = 0; i < width; i++) {
-            if (i < width - 1) {
-                JButton bNewGate = new JButton("Add Gate");
-                bNewGate.addActionListener(new AddGateListener(i));
-
-                bNewGate.setLocation(i * 200 + 70, 10);
-                bNewGate.setSize(100, 20);
-                add(bNewGate);
+        /* Make one graphic socket for every socket of the model */
+        for (int i = 0; i < getColumnCount() - 1; i++) {
+            for (int j = 0; j < getRowCount() - 1; j++) {
+                GSocket gSocket = new GSocket(mBreadboard.sockets[i][j], this);
+                gSocket.setLocation(getSocketLocation(i, j));
+                add(gSocket);
             }
 
-            boolean editable = i == 0 ? true : false;
+        }
 
-            for (int j = 0; j < height; j++) {
+        /* Make one graphic pin for every pin of the model */
+        for (int i = 0; i < getColumnCount(); i++) {
+            boolean editable = i == 0 ? true : false;
+            for (int j = 0; j < rows; j++) {
                 GPin gPin = new GPin(this, mBreadboard.pins[i][j], editable);
                 gPin.setLocation(getPinLocation(i, j));
                 add(gPin);
             }
+
         }
+
     }
 
     public int getRowCount() {
-        return mBreadboard.pins[0].length;
+        return mBreadboard.getRowCount();
     }
 
     public int getColumnCount() {
-        return mBreadboard.pins.length;
+        return mBreadboard.getColumnCount();
     }
 
     protected Point getPinLocation(int i, int j) {
@@ -67,22 +65,6 @@ public class GBreadboard extends JPanel {
         return new Point(i * 200 + 85, (j + 1) * 50 + 10);
     }
 
-    public void addSocket(Type type, Integer col) {
-        try {
-            int i = col;
-            int j = mBreadboard.RowCounter[col]++;
-
-            mBreadboard.sockets[i][j] = new Socket(this.mBreadboard, i, j, type);
-            GSocket gSocket = new GSocket(mBreadboard.sockets[i][j], this);
-
-            gSocket.setLocation(getSocketLocation(i, j));
-            add(gSocket);
-            repaint();
-        } catch (Exception exc) {
-            System.out.println("Trying to add more Gates than the breadboard can fit!!!");
-        }
-    }
-
     public void updateSimulation() {
         mBreadboard.updateSimulation();
         repaint();
@@ -91,10 +73,10 @@ public class GBreadboard extends JPanel {
     public void paint(Graphics g_) {
         super.paint(g_);
         Graphics2D g = (Graphics2D) g_;
-        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (mBreadboard.sockets != null) {
+            /* Draw socket input connections */
             for (int x = 0; x < getColumnCount() - 1; x++) {
                 for (int y = 0; y < getRowCount() - 1; y++) {
                     if (mBreadboard.sockets[x][y] != null) {
@@ -110,16 +92,18 @@ public class GBreadboard extends JPanel {
                     }
                 }
             }
+            /* Draw socket output connections */
             for (int x = 1; x < getColumnCount(); x++) {
                 for (int y = 0; y < getRowCount(); y++) {
                     if (mBreadboard.pins[x][y] != null) {
                         Pin pin = mBreadboard.pins[x][y];
                         Socket sock;
+                        int x1, y1, x2, y2;
                         if ((sock = pin.getSourceSocket()) != null) {
-                            int x1 = getPinLocation(x, y).x;
-                            int y1 = getPinLocation(x, y).y;
-                            int x2 = getSocketLocation(sock.getColumn(), sock.getRow()).x + 50;
-                            int y2 = getSocketLocation(sock.getColumn(), sock.getRow()).y + 20;
+                            x1 = getPinLocation(x, y).x;
+                            y1 = getPinLocation(x, y).y;
+                            x2 = getSocketLocation(sock.getColumn(), sock.getRow()).x + 50;
+                            y2 = getSocketLocation(sock.getColumn(), sock.getRow()).y + 20;
                             g.drawLine(x1, y1, x2, y2);
                         }
                     }
@@ -129,16 +113,4 @@ public class GBreadboard extends JPanel {
 
     }
 
-    class AddGateListener implements ActionListener {
-        int column;
-
-        public AddGateListener(int col) {
-            column = col;
-        }
-
-        public void actionPerformed(ActionEvent e) {
-            new GatePicker(GBreadboard.this, column);
-        }
-
-    }
 }
