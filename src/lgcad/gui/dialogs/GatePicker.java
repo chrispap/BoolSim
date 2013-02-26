@@ -10,12 +10,12 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 
 import lgcad.gui.GSocket;
-import lgcad.model.Gate.Type;
+import lgcad.model.Gate;
 
 public class GatePicker extends JDialog {
     private static final long serialVersionUID = 1L;
 
-    JComboBox comboGate;
+    JComboBox<Gate.Type> comboGate;
     GSocket gSocket;
 
     public GatePicker(GSocket sock) {
@@ -23,12 +23,12 @@ public class GatePicker extends JDialog {
         this.gSocket = sock;
         JPanel panel;
         add(panel = new JPanel());
-        comboGate = new JComboBox(Type.values());
+        comboGate = new JComboBox<Gate.Type>(Gate.Type.values());
         panel.add(comboGate);
         JButton bOk = new JButton("OK");
         bOk.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                gSocket.setGateType((Type) comboGate.getSelectedItem());
+                gSocket.setGateType( (lgcad.model.Gate.Type) comboGate.getSelectedItem());
                 setVisible(false);
                 gSocket.getParentBreadboard().updateSimulation();
             }

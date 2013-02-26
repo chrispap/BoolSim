@@ -15,7 +15,7 @@ import lgcad.gui.GSocket;
 public class InputPicker extends JDialog {
     private static final long serialVersionUID = 1L;
 
-    JComboBox input1, input2, output;
+    JComboBox<Integer> input1, input2, output;
     GSocket gSocket;
 
     public InputPicker(GSocket gate) {
@@ -39,12 +39,12 @@ public class InputPicker extends JDialog {
         });
 
         panel.add(new JLabel("Input Pin 1"));
-        panel.add(input1 = new JComboBox(pinNumbers));
+        panel.add(input1 = new JComboBox<Integer>(pinNumbers));
         panel.add(new JLabel("Input Pin 2"));
-        panel.add(input2 = new JComboBox(pinNumbers));
+        panel.add(input2 = new JComboBox<Integer>(pinNumbers));
         input2.setSelectedIndex(1);
         panel.add(new JLabel("Output pin"));
-        panel.add(output = new JComboBox(pinNumbers));
+        panel.add(output = new JComboBox<Integer>(pinNumbers));
         panel.add(bOk);
 
         setLocationRelativeTo(gSocket.getParentBreadboard());
