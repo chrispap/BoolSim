@@ -24,9 +24,8 @@ public class Socket {
     }
 
     public boolean getValue() {
-        if (gate == null)
-            return false;
-        
+        if (gate == null) return false;
+
         int i = 0;
         boolean[] inputs = new boolean[inputPinNumbers.size()];
         for (int pinNum : inputPinNumbers)

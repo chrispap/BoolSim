@@ -28,13 +28,13 @@ public class GatePicker extends JDialog {
         JButton bOk = new JButton("OK");
         bOk.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
-                gSocket.setGateType( (lgcad.model.Gate.Type) comboGate.getSelectedItem());
+                gSocket.setGateType((lgcad.model.Gate.Type) comboGate.getSelectedItem());
                 setVisible(false);
                 gSocket.getParentBreadboard().updateSimulation();
             }
         });
         panel.add(bOk);
-        
+
         setLocationRelativeTo(gSocket.getParentBreadboard());
         pack();
         setResizable(false);

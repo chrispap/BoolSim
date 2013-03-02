@@ -113,9 +113,9 @@ public class GSocket extends JComponent {
     class GateClickListener extends MouseAdapter {
         public void mouseClicked(MouseEvent evt) {
             if (evt.getButton() == 1)
-            	new GatePicker(GSocket.this);
+                new GatePicker(GSocket.this);
             else
-            	new InputPicker(GSocket.this);
+                new InputPicker(GSocket.this);
 
             super.mouseClicked(evt);
         }
